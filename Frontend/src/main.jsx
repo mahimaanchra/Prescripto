@@ -8,6 +8,5 @@ import NavBar from './components/NavBar.jsx'
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <App />
-    <NavBar/>
   </BrowserRouter>,
 )
