@@ -22,12 +22,33 @@ const Appointment = () => {
       currentDate.setDate(today.getDate()+i);
       // setting end time of the date with index
       let endTime = new Date()
-      endTime.setDate(today.getDate()+1);
+      endTime.setDate(today.getDate()+i);
       endTime.setHours(21,0,0)
       //setting hours
-      //if(today.getDate() === currentDate.getDate())
+      if(today.getDate() === currentDate.getDate()){
+        currentDate.setHours(currentDate.getHours()>10 ? currentDate.getHours() + 1 : 10)
+        currentDate.setMinutes(currentDate.getMinutes()>30 ? 30 : 0)
+      }else{
+        currentDate.setHours(10);
+        currentDate.setMinutes(0);
+      }
+
+      let timeSlots = []
+
+      while(currentDate<endTime){
+        let formattedTime = currentDate.toLocaleTimeString([] , {hour:'2-digit' , minute: '2-digit'})
+        timeSlots.push({
+          datetime : new Date(currentDate),
+          time: formattedTime
+        })
+        currentDate.setMinutes(currentDate.getMinutes() + 30)
+      }
+      setDocSlots(prev => ([...prev , timeSlots]));
      }
   }
+  useEffect(()=>{
+
+  },[docSlots])
   const fetchDocInfo = async () => {
     const docInfo = doctors.find(doc => doc._id === docId);
     setDocInfo(docInfo);
