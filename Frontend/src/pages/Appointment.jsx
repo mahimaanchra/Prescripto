@@ -15,9 +15,13 @@ const Appointment = () => {
 
   const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 
-  const getAvailableSlot = async () => {
-    setDocSlots([])
+  const fetchDocInfo = async () => {
+    const foundDoc = doctors.find((doc) => doc._id === docId)
+    setDocInfo(foundDoc)
+  }
 
+  const getAvailableSlot = async () => {
+    let allSlots = []
     let today = new Date()
 
     for (let i = 0; i < 7; i++) {
@@ -52,13 +56,11 @@ const Appointment = () => {
         currentDate.setMinutes(currentDate.getMinutes() + 30)
       }
 
-      setDocSlots((prev) => [...prev, timeSlots])
+      allSlots.push(timeSlots)
     }
-  }
 
-  const fetchDocInfo = async () => {
-    const docInfo = doctors.find((doc) => doc._id === docId)
-    setDocInfo(docInfo)
+    // Set slots all at once instead of inside the loop
+    setDocSlots(allSlots)
   }
 
   useEffect(() => {
@@ -71,7 +73,7 @@ const Appointment = () => {
     }
   }, [docInfo])
 
-  // 1. Create a clean variable containing ONLY days that have available slots
+  // Filter available slots
   const availableSlots = docSlots.filter((item) => item.length > 0)
 
   return (
@@ -163,13 +165,13 @@ const Appointment = () => {
               ))}
           </div>
 
-          {/* Book Appointment Button */}
           <button className='bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6 cursor-pointer'>
             Book an appointment
           </button>
         </div>
-        {/*Listing Related Doctors*/}
-        <RelatedDoctors docId={docId} speciality={docInfo.speciality}/>
+
+        {/* Related Doctors */}
+        <RelatedDoctors docId={docId} speciality={docInfo.speciality} />
       </div>
     )
   )
