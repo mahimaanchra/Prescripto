@@ -1,17 +1,24 @@
-import { createContext } from "react";
+import { createContext, useState } from "react";
 
-export const AppContext = createContext()
+export const AppContext = createContext();
 
 const AppContextProvider = (props) => {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+  const [aToken, setAToken] = useState(
+    localStorage.getItem("aToken") ? localStorage.getItem("aToken") : ""
+  );
 
   const value = {
+    aToken,
+    setAToken,
+    backendUrl,
+  };
 
-  }
   return (
     <AppContext.Provider value={value}>
-        {props.children}
+      {props.children}
     </AppContext.Provider>
-  )
-}
+  );
+};
 
-export default AppContextProvider
+export default AppContextProvider;
