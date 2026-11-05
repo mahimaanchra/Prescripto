@@ -1,4 +1,4 @@
-import { createContext, useEffect } from "react";
+import { createContext, useEffect, useState } from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
@@ -8,16 +8,15 @@ const AppContextProvider = (props) => {
     const currency = '$';
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const [doctors, setDoctors] = useState([]);
+    const [token, setToken] = useState(localStorage.getItem('token') ? localStorage.getItem('token') : false);
+    const [userData, setUserdata] = useState(false);
 
-    const value = {
-        doctors, currency
-    };
 
     const getDoctorsData = async () => {
 
         try {
-            const { data } = axios.get(backendUrl + '/api/doctor/list');
-            if (data.succes) {
+            const { data } = await axios.get(backendUrl + '/api/doctor/list');
+            if (data.success) {
                 setDoctors(data.doctors);
             } else {
                 toast.error(data.message);
@@ -28,15 +27,42 @@ const AppContextProvider = (props) => {
         }
 
     }
+
+    const loadUserProfileData = async () => {
+
+        try {
+            const { data } = await axios.get(backendUrl + '/api/user/get-profile', { headers: { token } });
+            if (data.success) {
+                setUserdata(data.userData);
+            } else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message)
+        }
+    }
+
+    const value = {
+        doctors, currency, token, setToken, backendUrl, userData, setUserdata, loadUserProfileData
+    };
+
     useEffect(() => {
         getDoctorsData();
     }, [])
+    useEffect(() => {
+        if (token) {
+            loadUserProfileData();
+        } else {
+            setUserdata(false)
+        }
+    }, [token])
 
     return (
         <AppContext.Provider value={value}>
             {props.children}
         </AppContext.Provider>
     );
-};
+}
 
 export default AppContextProvider;
