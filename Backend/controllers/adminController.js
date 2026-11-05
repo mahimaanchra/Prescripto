@@ -23,7 +23,7 @@ const addDoctor = async (req, res) => {
         if (!validator.isEmail(email)) {
             return res.json({ success: false, message: "Please enter valid email" })
         }
-       
+
         //  Fixed password length check (< 8 characters instead of < 0)
         if (password.length < 8) {
             return res.json({ success: false, message: "Please enter a strong password (at least 8 characters)" })
@@ -36,7 +36,7 @@ const addDoctor = async (req, res) => {
         // Upload image to Cloudinary
         const imageUpload = await cloudinary.uploader.upload(imageFile.path, { resource_type: "image" })
         const imageUrl = imageUpload.secure_url
-       
+
         const doctorData = {
             name,
             email,
@@ -63,15 +63,15 @@ const addDoctor = async (req, res) => {
 }
 
 //api for admin login
-const loginAdmin = async (res,req) => {
+const loginAdmin = async (req, res) => {
     try {
-        const {email , password} = req.body
+        const { email, password } = req.body
 
-        if(email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD){
-        const token = jwt.sign(email+password, process.env.JWT_SECRET )
-        res.json({success:true , token})
-        }else{
-            res.json({success:false, message:"Invalid credentials"})
+        if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+            const token = jwt.sign(email + password, process.env.JWT_SECRET)
+            res.json({ success: true, token })
+        } else {
+            res.json({ success: false, message: "Invalid credentials" })
         }
     } catch (error) {
         console.log(error)
@@ -79,12 +79,12 @@ const loginAdmin = async (res,req) => {
     }
 }
 //API to get all doctors list for admin panel
-const allDoctors = async(req , res)=> {
+const allDoctors = async (req, res) => {
     try {
         const doctors = await doctorModel.find({}).select('-password')
-        res.json({success:true,doctors})
+        res.json({ success: true, doctors })
     } catch (error) {
-        res.json({success:false,message:error.message})
+        res.json({ success: false, message: error.message })
     }
 }
-export { addDoctor , loginAdmin }
+export { addDoctor, loginAdmin, allDoctors }
