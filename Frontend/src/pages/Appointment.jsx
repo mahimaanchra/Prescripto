@@ -1,17 +1,21 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect, useNavigate } from 'react'
 import { useParams } from 'react-router-dom'
 import { AppContext } from '../context/AppContext'
 import { assets } from '../../assets 2/assets_frontend/assets'
 import RelatedDoctors from '../components/RelatedDoctors'
+import { toast } from 'react-toastify'
+import axios from 'axios'
 
 const Appointment = () => {
   const { docId } = useParams()
-  const { doctors, currency } = useContext(AppContext)
+  const { doctors, currency, backendUrl, token, getDoctorsData } = useContext(AppContext)
 
   const [docInfo, setDocInfo] = useState(null)
   const [docSlots, setDocSlots] = useState([])
   const [slotIndex, setSlotIndex] = useState(0)
   const [slotTime, setSlotTime] = useState('')
+
+  const navigate = useNavigate();
 
   const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 
@@ -61,6 +65,39 @@ const Appointment = () => {
 
     // Set slots all at once instead of inside the loop
     setDocSlots(allSlots)
+  }
+
+  const bookAppointment = async () => {
+    if (!token) {
+      toast.warn("Please login first");
+      navigate('/login')
+      return
+    }
+    try {
+      const date = docSlots[slotIndex][0].datetime;
+      let day = date.getDate();
+      let month = date.getMonth() + 1;
+      let year = date.getFullYear();
+
+      const slotDate = day = "_" + month + "_" + year;
+      const { data } = await axios.post(backendUrl + "/api/user/book-appointment", {
+        docId, slotDate, slotIndex
+      }, {
+        headers: {
+          token
+        }
+      })
+      if (data.success) {
+        toast.success(data.message)
+        getDoctorsData()
+        navigate('/my-appointments')
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      console.error(error)
+      toast.error(error.message);
+    }
   }
 
   useEffect(() => {
@@ -133,11 +170,10 @@ const Appointment = () => {
               availableSlots.map((item, index) => (
                 <div
                   onClick={() => setSlotIndex(index)}
-                  className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${
-                    slotIndex === index
-                      ? 'bg-primary text-white'
-                      : 'border border-gray-200'
-                  }`}
+                  className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${slotIndex === index
+                    ? 'bg-primary text-white'
+                    : 'border border-gray-200'
+                    }`}
                   key={index}
                 >
                   <p>{item[0] && daysOfWeek[item[0].datetime.getDay()]}</p>
@@ -153,11 +189,10 @@ const Appointment = () => {
               availableSlots[slotIndex].map((item, index) => (
                 <p
                   onClick={() => setSlotTime(item.time)}
-                  className={`text-sm font-light flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${
-                    item.time === slotTime
-                      ? 'bg-primary text-white'
-                      : 'text-gray-400 border border-gray-300'
-                  }`}
+                  className={`text-sm font-light flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${item.time === slotTime
+                    ? 'bg-primary text-white'
+                    : 'text-gray-400 border border-gray-300'
+                    }`}
                   key={index}
                 >
                   {item.time.toLowerCase()}
@@ -165,7 +200,7 @@ const Appointment = () => {
               ))}
           </div>
 
-          <button className='bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6 cursor-pointer'>
+          <button onClick={bookAppointment} className='bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6 cursor-pointer'>
             Book an appointment
           </button>
         </div>
