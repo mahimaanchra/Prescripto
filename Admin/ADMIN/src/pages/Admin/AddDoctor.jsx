@@ -4,6 +4,7 @@ import { AdminContext } from '../../context/AdminContext'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 
+// Add doctor form
 const AddDoctor = () => {
   const [docImg, setDocImg] = useState(false)
   const [name, setName] = useState('')
@@ -17,7 +18,9 @@ const AddDoctor = () => {
   const [address1, setAddress1] = useState('')
   const [address2, setAddress2] = useState('')
 
-  const { backendUrl, aToken } = useContext(AdminContext)
+  const { backendUrl, aToken } = useContext(AdminContext);
+
+  // Submit handler
   const onSubmitHandler = async (event) => {
     event.preventDefault()
     try {
@@ -35,6 +38,7 @@ const AddDoctor = () => {
       formData.append('speciality', speciality)
       formData.append('degree', degree)
       formData.append('address', JSON.stringify({ line1: address1, line2: address2 }))
+
 
       const { data } = await axios.post(backendUrl + 'api/admin/add-doctor', formData, { headers: { aToken } })
       if (data.success) {

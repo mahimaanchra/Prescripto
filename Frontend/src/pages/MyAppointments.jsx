@@ -7,6 +7,7 @@ const MyAppointments = () => {
   const { backendUrl, token } = useContext(AppContext)
   const [appointments, setAppointments] = useState([])
 
+
   const getUserAppointments = async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/user/appointments`, {

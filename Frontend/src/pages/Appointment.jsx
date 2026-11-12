@@ -24,6 +24,7 @@ const Appointment = () => {
     setDocInfo(foundDoc)
   }
 
+  // Fetch available slots
   const getAvailableSlot = async () => {
     let allSlots = []
     let today = new Date()
@@ -77,6 +78,7 @@ const Appointment = () => {
     // Set slots all at once instead of inside the loop
     setDocSlots(allSlots)
   }
+
 
   const bookAppointment = async () => {
     if (!token) {
