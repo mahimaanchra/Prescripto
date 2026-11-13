@@ -79,7 +79,7 @@ const Appointment = () => {
     setDocSlots(allSlots)
   }
 
-
+  // Book appointment
   const bookAppointment = async () => {
     if (!token) {
       toast.warn("Please login first");

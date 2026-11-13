@@ -7,7 +7,7 @@ const MyAppointments = () => {
   const { backendUrl, token } = useContext(AppContext)
   const [appointments, setAppointments] = useState([])
 
-
+  // Fetch user appointments
   const getUserAppointments = async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/user/appointments`, {
@@ -24,7 +24,6 @@ const MyAppointments = () => {
       toast.error(error.message)
     }
   }
-
   useEffect(() => {
     if (token) {
       getUserAppointments()
