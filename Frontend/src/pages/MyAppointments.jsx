@@ -32,6 +32,7 @@ const MyAppointments = () => {
     }
   }
 
+  // cancel appointment function
   const cancelAppointment = async (appointmentId) => {
     try {
       const { data } = await axios.post(backendUrl + "/api/user/cancel-appointment", { appointmentId }, {
@@ -52,6 +53,7 @@ const MyAppointments = () => {
     }
   }
 
+  // Razorpay initialization
   const initPay = (order) => {
     const options = {
       key: import.meta.env.VITE_RAZORPAY_KEY_ID,
