@@ -1,10 +1,11 @@
 import React, { useContext, useEffect } from 'react'
 import { AdminContext } from '../../context/AdminContext'
 import { AppContext } from '../../context/AppContext'
+import { assets } from '../../assets/assets'
 
 const AllAppointments = () => {
   const { aToken, appointments, cancelAppointment, getAllAppointments } = useContext(AdminContext)
-  const { calculateAge, currency } = useContext(AppContext)
+  const { calculateAge, slotDateFormat, currency } = useContext(AppContext)
 
   useEffect(() => {
     if (aToken) {
@@ -36,35 +37,26 @@ const AllAppointments = () => {
               className='flex flex-wrap justify-between max-sm:gap-2 sm:grid sm:grid-cols-[0.5fr_3fr_1fr_3fr_3fr_1fr_1fr] items-center text-gray-500 py-3 px-6 border-b hover:bg-gray-50 transition-all'
             >
               <p className='max-sm:hidden'>{index + 1}</p>
-              
-              <div className='flex items-center gap-2'>
-                <img className='w-8 h-8 rounded-full object-cover' src={item.userData?.image} alt="" />
-                <p className='font-medium text-gray-800'>{item.userData?.name}</p>
-              </div>
-
-              <p className='max-sm:hidden'>{calculateAge ? calculateAge(item.userData?.dob) : 'N/A'}</p>
-
-              <p>{item.slotDate}, {item.slotTime}</p>
 
               <div className='flex items-center gap-2'>
-                <img className='w-8 h-8 rounded-full bg-gray-200 object-cover' src={item.docData?.image} alt="" />
-                <p>{item.docData?.name}</p>
+                <img className='w-8 h-8 rounded-full object-cover' src={item.userData.image} alt="" />
+                <p className='font-medium text-gray-800'>{item.userData.name}</p>
               </div>
 
-              <p>{currency || '$'}{item.amount}</p>
+              <p className='max-sm:hidden'>{calculateAge ? calculateAge(item.userData.dob) : 'N/A'}</p>
+
+              <p>{slotDateFormat(item.slotDate)}, {item.slotTime}</p>
+
+              <div className='flex items-center gap-2'>
+                <img className='w-8 h-8 rounded-full bg-gray-200 object-cover' src={item.docData.image} alt="" />
+                <p>{item.docData.name}</p>
+              </div>
+
+              <p>{currency}{item.amount}</p>
 
               {item.cancelled ? (
                 <p className='text-red-400 text-xs font-medium'>Cancelled</p>
-              ) : item.isCompleted ? (
-                <p className='text-green-500 text-xs font-medium'>Completed</p>
-              ) : (
-                <button
-                  onClick={() => cancelAppointment && cancelAppointment(item._id)}
-                  className='text-xs text-red-500 border border-red-500 px-2 py-1 rounded cursor-pointer hover:bg-red-50 transition-all'
-                >
-                  Cancel
-                </button>
-              )}
+              ) : <img onClick={() => cancelAppointment(item._id)} className='w-10 cursor-pointer' src={assets.cancel_icon} alt="" />}
             </div>
           ))
         ) : (
