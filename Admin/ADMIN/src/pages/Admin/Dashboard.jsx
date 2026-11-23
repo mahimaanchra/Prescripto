@@ -57,10 +57,10 @@ const Dashboard = () => {
           {dashData.latestAppointments && dashData.latestAppointments.length > 0 ? (
             dashData.latestAppointments.map((item, index) => (
               <div className='flex items-center px-6 py-3 gap-3 hover:bg-gray-50 transition-all' key={item._id || index}>
-                <img className='w-10 h-10 rounded-full object-cover bg-gray-100' src={item.docData?.image} alt="" />
-                
+                <img className='w-10 h-10 rounded-full object-cover bg-gray-100' src={item.docData.image} alt="" />
+
                 <div className='flex-1 text-sm'>
-                  <p className='text-gray-800 font-medium'>{item.docData?.name}</p>
+                  <p className='text-gray-800 font-medium'>{item.docData.name}</p>
                   <p className='text-gray-500 text-xs'>
                     Booking on {slotDateFormat ? slotDateFormat(item.slotDate) : item.slotDate}
                   </p>
@@ -68,16 +68,7 @@ const Dashboard = () => {
 
                 {item.cancelled ? (
                   <p className='text-red-400 text-xs font-medium'>Cancelled</p>
-                ) : item.isCompleted ? (
-                  <p className='text-green-500 text-xs font-medium'>Completed</p>
-                ) : (
-                  <button
-                    onClick={() => cancelAppointment && cancelAppointment(item._id)}
-                    className='text-xs text-red-500 border border-red-500 px-2 py-1 rounded cursor-pointer hover:bg-red-50 transition-all'
-                  >
-                    Cancel
-                  </button>
-                )}
+                ) : <img onClick={() => cancelAppointment(item._id)} className='w-10 cursor-pointer' src={assets.cancel_icon} alt="" />}
               </div>
             ))
           ) : (
