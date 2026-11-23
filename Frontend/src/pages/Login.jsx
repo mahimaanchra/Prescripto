@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 
 const Login = () => {
   const navigate = useNavigate()
-  const { backendUrl, token, setToken } = useContext(AppContext)
+  const { backendUrl, token, setToken, userData } = useContext(AppContext)
 
   const [state, setState] = useState('Sign Up')
 
@@ -43,10 +43,10 @@ const Login = () => {
   }
 
   useEffect(() => {
-    if (token) {
+    if (token && userData) {
       navigate('/')
     }
-  }, [token])
+  }, [token, userData])
 
   return (
     <form onSubmit={onSubmitHandler} className='min-h-[80vh] flex items-center'>
