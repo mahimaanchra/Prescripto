@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, useNavigate } from 'react'
 import { useParams } from 'react-router-dom'
 import { AppContext } from '../context/AppContext'
-import { assets } from '../../assets 2/assets_frontend/assets'
+import { assets } from '../../assets_frontend/assets'
 import RelatedDoctors from '../components/RelatedDoctors'
 import { toast } from 'react-toastify'
 import axios from 'axios'

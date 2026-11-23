@@ -1,6 +1,5 @@
 import React from 'react'
-import { assets } from '../../assets 2/assets_frontend/assets'
-
+import { assets } from '../../assets_frontend/assets'
 const Header = () => {
   return (
     <div className='flex flex-col md:flex-row flex-wrap bg-primary rounded-lg px-6 md:px-10 lg:px-20'>

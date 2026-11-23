@@ -1,5 +1,5 @@
 import React from 'react'
-import { assets } from '../../assets 2/assets_frontend/assets'
+import { assets } from '../../assets_frontend/assets'
 
 const Contact = () => {
   return (
