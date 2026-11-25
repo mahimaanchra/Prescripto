@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { AdminContext } from '../context/AdminContext'
+import { DoctorContext } from '../context/DoctorContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
@@ -9,6 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState('')
 
   const { setAToken, backendUrl } = useContext(AdminContext)
+  const { setDToken } = useContext(DoctorContext)
 
   const onSubmitHandler = async (event) => {
     event.preventDefault()
@@ -25,12 +27,11 @@ const Login = () => {
           toast.error(data.message)
         }
       } else {
-        // Doctor login endpoint logic
-        const { data } = await axios.post(`${backendUrl}/api/doctor/login`, { email, password })
+        const { data } = await axios.post(backendUrl + '/api/doctor/login', { email, password })
 
         if (data.success) {
           localStorage.setItem('dToken', data.token)
-          // setDToken(data.token) -> add doctor token context setter when needed
+          setDToken(data.token)
           toast.success('Logged in successfully!')
         } else {
           toast.error(data.message)
@@ -50,23 +51,23 @@ const Login = () => {
 
         <div className='w-full'>
           <p>Email</p>
-          <input 
-            onChange={(e) => setEmail(e.target.value)} 
-            value={email} 
-            className='border border-[#DADADA] rounded w-full p-2 mt-1' 
-            type="email" 
-            required 
+          <input
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            className='border border-[#DADADA] rounded w-full p-2 mt-1'
+            type="email"
+            required
           />
         </div>
 
         <div className='w-full'>
           <p>Password</p>
-          <input 
-            onChange={(e) => setPassword(e.target.value)} 
-            value={password} 
-            className='border border-[#DADADA] rounded w-full p-2 mt-1' 
-            type="password" 
-            required 
+          <input
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+            className='border border-[#DADADA] rounded w-full p-2 mt-1'
+            type="password"
+            required
           />
         </div>
 
@@ -77,8 +78,8 @@ const Login = () => {
         {state === 'Admin' ? (
           <p>
             Doctor Login?{' '}
-            <span 
-              className='text-primary underline cursor-pointer' 
+            <span
+              className='text-primary underline cursor-pointer'
               onClick={() => setState('Doctor')}
             >
               Click here
@@ -87,8 +88,8 @@ const Login = () => {
         ) : (
           <p>
             Admin Login?{' '}
-            <span 
-              className='text-primary underline cursor-pointer' 
+            <span
+              className='text-primary underline cursor-pointer'
               onClick={() => setState('Admin')}
             >
               Click here
